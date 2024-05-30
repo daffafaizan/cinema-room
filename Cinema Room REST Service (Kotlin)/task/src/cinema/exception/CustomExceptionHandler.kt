@@ -9,6 +9,14 @@ import org.springframework.web.context.request.WebRequest
 @ControllerAdvice
 class CustomExceptionHandler {
 
+    @ExceptionHandler(WrongPasswordException::class)
+    fun wrongPasswordExceptionHandler(e: RuntimeException, request: WebRequest): ResponseEntity<CustomErrorMessage> {
+        val body = CustomErrorMessage(
+            e.message?:""
+        )
+        return ResponseEntity<CustomErrorMessage>(body, HttpStatus.UNAUTHORIZED)
+    }
+
     @ExceptionHandler(RuntimeException::class)
     fun runtimeExceptionHandler(e: RuntimeException, request: WebRequest): ResponseEntity<CustomErrorMessage> {
         val body = CustomErrorMessage(

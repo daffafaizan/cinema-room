@@ -4,8 +4,10 @@ import cinema.dto.response.CinemaResponseDTO
 import cinema.dto.request.PurchaseSeatRequestDTO
 import cinema.dto.request.ReturnRequestDTO
 import cinema.dto.response.ReturnResponseDTO
+import cinema.dto.response.StatsResponseDTO
 import cinema.exception.OutOfBoundsException
 import cinema.exception.TicketSoldException
+import cinema.exception.WrongPasswordException
 import cinema.exception.WrongTokenException
 import cinema.model.Ticket
 import cinema.repository.CinemaRepository
@@ -19,7 +21,7 @@ const val COLUMN = 9
 class CinemaService(val cinemaRepository: CinemaRepository, val ticketRepository: TicketRepository) {
 
     fun getAllSeats(): CinemaResponseDTO {
-        val seats = cinemaRepository.getAllSeats()
+        val seats = cinemaRepository.getAvailableSeats()
         return CinemaResponseDTO(
             ROW,
             COLUMN,
@@ -62,5 +64,21 @@ class CinemaService(val cinemaRepository: CinemaRepository, val ticketRepository
                 throw WrongTokenException("Wrong token!")
             }
         }
+    }
+
+    fun getStats(password: String?): StatsResponseDTO {
+        if (password == null || password != "super_secret") {
+            throw WrongPasswordException("The password is wrong!")
+        }
+
+        val current_income = cinemaRepository.getIncome()
+        val number_of_available_seats = cinemaRepository.getAvailableSeats().count()
+        val number_of_purchased_tickets = cinemaRepository.getPurchasedSeats().count()
+
+        return StatsResponseDTO(
+            current_income,
+            number_of_available_seats,
+            number_of_purchased_tickets
+        )
     }
 }

@@ -18,8 +18,16 @@ class CinemaRepository {
         }
     }
 
-    fun getAllSeats(): List<Seat> {
+    fun getAvailableSeats(): List<Seat> {
         return seats.filter { !it.booked }
+    }
+
+    fun getPurchasedSeats(): List<Seat> {
+        return seats.filter { it.booked }
+    }
+
+    fun getIncome(): Int {
+        return seats.filter { it.booked }.sumOf { it.price }
     }
 
     fun getSeat(row: Int, column: Int): Seat? {
