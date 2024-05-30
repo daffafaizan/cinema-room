@@ -1,4 +1,4 @@
-package cinema.dto
+package cinema.dto.response
 
 import cinema.model.Seat
 

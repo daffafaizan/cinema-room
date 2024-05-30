@@ -1,4 +1,4 @@
-package cinema.dto
+package cinema.dto.request
 
 data class PurchaseSeatRequestDTO(
     val row: Int,
