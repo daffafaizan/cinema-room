@@ -40,4 +40,58 @@ class CinemaRepositoryTests {
 
         assertTrue(purchasedSeats.size == 1)
     }
+
+    @Test
+    fun testGetIncome() {
+        val mockSeat = Seat(
+            CinemaRepositoryConstants.ROW,
+            CinemaRepositoryConstants.COLUMN,
+            CinemaHelpers.seatPrice(CinemaRepositoryConstants.ROW, CinemaRepositoryConstants.COLUMN),
+            true
+        )
+
+        cinemaRepository.updateSeat(CinemaRepositoryConstants.ROW, CinemaRepositoryConstants.COLUMN, mockSeat)
+
+        val income = cinemaRepository.getIncome()
+
+        assertTrue(income == CinemaHelpers.seatPrice(CinemaRepositoryConstants.ROW, CinemaRepositoryConstants.COLUMN))
+    }
+
+    @Test
+    fun testGetSeat() {
+        val mockSeat = Seat(
+            CinemaRepositoryConstants.ROW,
+            CinemaRepositoryConstants.COLUMN,
+            CinemaHelpers.seatPrice(CinemaRepositoryConstants.ROW, CinemaRepositoryConstants.COLUMN),
+            false
+        )
+
+        val seat = cinemaRepository.getSeat(CinemaRepositoryConstants.ROW, CinemaRepositoryConstants.COLUMN)
+
+        assertEquals(mockSeat, seat)
+    }
+
+    @Test
+    fun testUpdateSeat() {
+        val mockSeatBeforeUpdate = Seat(
+            CinemaRepositoryConstants.ROW,
+            CinemaRepositoryConstants.COLUMN,
+            CinemaHelpers.seatPrice(CinemaRepositoryConstants.ROW, CinemaRepositoryConstants.COLUMN),
+            false
+        )
+        val mockSeatAfterUpdate = Seat(
+            CinemaRepositoryConstants.ROW,
+            CinemaRepositoryConstants.COLUMN,
+            CinemaHelpers.seatPrice(CinemaRepositoryConstants.ROW, CinemaRepositoryConstants.COLUMN),
+            true
+        )
+
+        val seatBeforeUpdate = cinemaRepository.getSeat(CinemaRepositoryConstants.ROW, CinemaRepositoryConstants.COLUMN)
+        assertEquals(mockSeatBeforeUpdate, seatBeforeUpdate)
+
+        cinemaRepository.updateSeat(CinemaRepositoryConstants.ROW, CinemaRepositoryConstants.COLUMN, mockSeatAfterUpdate)
+
+        val seatAfterUpdate = cinemaRepository.getSeat(CinemaRepositoryConstants.ROW, CinemaRepositoryConstants.COLUMN)
+        assertEquals(mockSeatAfterUpdate, seatAfterUpdate)
+    }
 }
