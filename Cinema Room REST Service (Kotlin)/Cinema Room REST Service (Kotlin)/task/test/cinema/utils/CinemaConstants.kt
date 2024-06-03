@@ -10,4 +10,5 @@ object CinemaConstants {
     const val PURCHASE_VALID_COLUMN = 4
     const val PURCHASE_INVALID_ROW = 100
     const val PURCHASE_INVALID_COLUMN = 200
+    const val INVALID_TOKEN = "INVALID-TOKEN"
 }

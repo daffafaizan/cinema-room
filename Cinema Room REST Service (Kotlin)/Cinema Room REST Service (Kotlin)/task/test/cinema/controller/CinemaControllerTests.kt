@@ -6,6 +6,7 @@ import cinema.dto.response.CinemaResponseDTO
 import cinema.dto.response.ReturnResponseDTO
 import cinema.exception.OutOfBoundsException
 import cinema.exception.TicketSoldException
+import cinema.exception.WrongTokenException
 import cinema.model.Seat
 import cinema.model.Ticket
 import cinema.service.CinemaService
@@ -146,6 +147,23 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
                 status().isOk,
                 content().contentType(MediaType.APPLICATION_JSON),
                 content().json(mapper.writeValueAsString(mockResponse))
+            )
+    }
+
+    @Test
+    fun testReturnInvalidBodyShouldReturnWithStatus400() {
+        val mockRequest = ReturnRequestDTO(
+            CinemaConstants.INVALID_TOKEN
+        )
+
+        Mockito.`when`(cinemaService.returnTicket(mockRequest)).thenThrow(WrongTokenException(""))
+
+        mockMvc.perform(MockMvcRequestBuilders
+            .post(CinemaConstants.RETURN_TICKET_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(mapper.writeValueAsString(mockRequest)))
+            .andExpectAll(
+                status().isBadRequest
             )
     }
 
