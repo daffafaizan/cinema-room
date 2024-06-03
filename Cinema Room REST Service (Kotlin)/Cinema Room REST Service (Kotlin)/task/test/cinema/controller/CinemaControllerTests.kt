@@ -1,16 +1,9 @@
 package cinema.controller
 
-import cinema.dto.request.PurchaseSeatRequestDTO
-import cinema.dto.request.ReturnRequestDTO
-import cinema.dto.response.CinemaResponseDTO
-import cinema.dto.response.ReturnResponseDTO
-import cinema.dto.response.StatsResponseDTO
-import cinema.exception.OutOfBoundsException
-import cinema.exception.TicketSoldException
-import cinema.exception.WrongPasswordException
-import cinema.exception.WrongTokenException
-import cinema.model.Seat
-import cinema.model.Ticket
+import cinema.dto.request.*
+import cinema.dto.response.*
+import cinema.exception.*
+import cinema.model.*
 import cinema.service.CinemaService
 import cinema.utils.CinemaConstants
 import cinema.utils.CinemaHelpers
