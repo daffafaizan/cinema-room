@@ -5,6 +5,8 @@ object CinemaConstants {
     const val PURCHASE_TICKET_URL = "/purchase"
     const val TOTAL_ROWS = 9
     const val TOTAL_COLUMNS = 9
-    const val PURCHASE_ROW = 3
-    const val PURCHASE_COLUMN = 4
+    const val PURCHASE_VALID_ROW = 3
+    const val PURCHASE_VALID_COLUMN = 4
+    const val PURCHASE_INVALID_ROW = 100
+    const val PURCHASE_INVALID_COLUMN = 200
 }

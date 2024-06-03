@@ -2,6 +2,7 @@ package cinema.controller
 
 import cinema.dto.request.PurchaseSeatRequestDTO
 import cinema.dto.response.CinemaResponseDTO
+import cinema.exception.OutOfBoundsException
 import cinema.model.Seat
 import cinema.model.Ticket
 import cinema.service.CinemaService
@@ -49,13 +50,13 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
     @Test
     fun testPurchaseValidBodyShouldReturnWithStatus200() {
         val mockRequest = PurchaseSeatRequestDTO(
-            row = CinemaConstants.PURCHASE_ROW,
-            column = CinemaConstants.PURCHASE_COLUMN
+            row = CinemaConstants.PURCHASE_VALID_ROW,
+            column = CinemaConstants.PURCHASE_VALID_COLUMN
         )
         val stubSeat = Seat(
-            CinemaConstants.PURCHASE_ROW,
-            CinemaConstants.PURCHASE_COLUMN,
-            CinemaHelpers.seatPrice(CinemaConstants.PURCHASE_COLUMN, CinemaConstants.PURCHASE_ROW),
+            CinemaConstants.PURCHASE_VALID_ROW,
+            CinemaConstants.PURCHASE_VALID_COLUMN,
+            CinemaHelpers.seatPrice(CinemaConstants.PURCHASE_VALID_COLUMN, CinemaConstants.PURCHASE_VALID_ROW),
             true
         )
         val mockResponse = Ticket(seat=stubSeat)
@@ -70,6 +71,24 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
                 status().isOk,
                 content().contentType(MediaType.APPLICATION_JSON),
                 content().json(mapper.writeValueAsString(mockResponse))
+            )
+    }
+
+    @Test
+    fun testPurchaseInvalidOutOfBoundsBodyShouldReturnWithStatus400() {
+        val mockRequest = PurchaseSeatRequestDTO(
+            row = CinemaConstants.PURCHASE_INVALID_ROW,
+            column = CinemaConstants.PURCHASE_INVALID_COLUMN
+        )
+
+        Mockito.`when`(cinemaService.purchaseTicket(mockRequest)).thenThrow(OutOfBoundsException(""))
+
+        mockMvc.perform(MockMvcRequestBuilders
+            .post(CinemaConstants.PURCHASE_TICKET_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(mapper.writeValueAsString(mockRequest)))
+            .andExpectAll(
+                status().isBadRequest
             )
     }
 
