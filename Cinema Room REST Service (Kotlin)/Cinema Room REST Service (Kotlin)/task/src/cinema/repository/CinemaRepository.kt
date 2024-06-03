@@ -1,6 +1,7 @@
 package cinema.repository
 
 import cinema.model.Seat
+import cinema.utils.CinemaHelpers
 import org.springframework.stereotype.Repository
 
 const val ROW = 9
@@ -13,7 +14,7 @@ class CinemaRepository {
     init {
         for (i in 1..COLUMN) {
             for (j in 1..ROW) {
-                seats.add(Seat(i, j, seatPrice(i, j), false))
+                seats.add(Seat(i, j, CinemaHelpers.seatPrice(i, j), false))
             }
         }
     }
@@ -39,12 +40,6 @@ class CinemaRepository {
         seats[index] = seat
     }
 
-    private final fun seatPrice(row: Int, seat: Int): Int {
-        if (row <= 4) {
-            return 10
-        }
-        return 8
-    }
 
 }
 
