@@ -1,7 +1,9 @@
 package cinema.controller
 
 import cinema.dto.request.PurchaseSeatRequestDTO
+import cinema.dto.request.ReturnRequestDTO
 import cinema.dto.response.CinemaResponseDTO
+import cinema.dto.response.ReturnResponseDTO
 import cinema.exception.OutOfBoundsException
 import cinema.exception.TicketSoldException
 import cinema.model.Seat
@@ -113,6 +115,37 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
             .content(mapper.writeValueAsString(mockRequest)))
             .andExpectAll(
                 status().isBadRequest
+            )
+    }
+
+    @Test
+    fun testReturnValidBodyShouldReturnWithStatus200() {
+        val stubSeat = Seat(
+            CinemaConstants.PURCHASE_VALID_ROW,
+            CinemaConstants.PURCHASE_VALID_COLUMN,
+            CinemaHelpers.seatPrice(CinemaConstants.PURCHASE_VALID_COLUMN, CinemaConstants.PURCHASE_VALID_ROW),
+            true
+        )
+        val stubTicket = Ticket(seat=stubSeat)
+        val mockRequest = ReturnRequestDTO(
+            stubTicket.token
+        )
+
+        stubSeat.booked = false
+        val mockResponse = ReturnResponseDTO(
+            stubSeat
+        )
+
+        Mockito.`when`(cinemaService.returnTicket(mockRequest)).thenReturn(mockResponse)
+
+        mockMvc.perform(MockMvcRequestBuilders
+            .post(CinemaConstants.RETURN_TICKET_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(mapper.writeValueAsString(mockRequest)))
+            .andExpectAll(
+                status().isOk,
+                content().contentType(MediaType.APPLICATION_JSON),
+                content().json(mapper.writeValueAsString(mockResponse))
             )
     }
 
