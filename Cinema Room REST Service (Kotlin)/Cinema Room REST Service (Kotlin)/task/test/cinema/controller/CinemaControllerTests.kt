@@ -36,10 +36,14 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
         Mockito.`when`(cinemaService.getAllSeats()).thenReturn(expectedResponse)
 
         mockMvc.perform(MockMvcRequestBuilders
-            .get("/seats"))
-            .andExpectAll(status().isOk, content().contentType(MediaType.APPLICATION_JSON), content().json(
-                mapper.writeValueAsString(expectedResponse)
-            ))
+            .get(CinemaConstants.GET_SEATS_URL))
+            .andExpectAll(
+                status().isOk,
+                content().contentType(MediaType.APPLICATION_JSON),
+                content().json(
+                    mapper.writeValueAsString(expectedResponse)
+                )
+            )
     }
 
     @Test
@@ -59,10 +63,14 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
         Mockito.`when`(cinemaService.purchaseTicket(mockRequest)).thenReturn(mockResponse)
 
         mockMvc.perform(MockMvcRequestBuilders
-            .post("/purchase")
+            .post(CinemaConstants.PURCHASE_TICKET_URL)
             .contentType(MediaType.APPLICATION_JSON)
             .content(mapper.writeValueAsString(mockRequest)))
-            .andExpectAll(status().isOk, content().contentType(MediaType.APPLICATION_JSON), content().json(mapper.writeValueAsString(mockResponse)))
+            .andExpectAll(
+                status().isOk,
+                content().contentType(MediaType.APPLICATION_JSON),
+                content().json(mapper.writeValueAsString(mockResponse))
+            )
     }
 
     companion object {
