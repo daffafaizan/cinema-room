@@ -41,7 +41,7 @@ class CinemaRepositoryTests {
 
     @Test
     fun testGetPurchasedSeats() {
-        cinemaRepository.updateSeat(RepositoryConstants.ROW, RepositoryConstants.COLUMN, mockPurchasedSeat)
+        cinemaRepository.updateSeat(mockPurchasedSeat)
 
         val purchasedSeats = cinemaRepository.getPurchasedSeats()
 
@@ -50,7 +50,7 @@ class CinemaRepositoryTests {
 
     @Test
     fun testGetIncome() {
-        cinemaRepository.updateSeat(RepositoryConstants.ROW, RepositoryConstants.COLUMN, mockPurchasedSeat)
+        cinemaRepository.updateSeat(mockPurchasedSeat)
 
         val income = cinemaRepository.getIncome()
 
@@ -69,7 +69,7 @@ class CinemaRepositoryTests {
         val seatBeforeUpdate = cinemaRepository.getSeat(RepositoryConstants.ROW, RepositoryConstants.COLUMN)
         assertEquals(mockAvailableSeat, seatBeforeUpdate)
 
-        cinemaRepository.updateSeat(RepositoryConstants.ROW, RepositoryConstants.COLUMN, mockPurchasedSeat)
+        cinemaRepository.updateSeat(mockPurchasedSeat)
 
         val seatAfterUpdate = cinemaRepository.getSeat(RepositoryConstants.ROW, RepositoryConstants.COLUMN)
         assertEquals(mockPurchasedSeat, seatAfterUpdate)

@@ -25,6 +25,17 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
     @MockBean
     private lateinit var cinemaService: CinemaService
 
+    private val availableSeats = mutableListOf<Seat>()
+
+    @BeforeEach
+    fun setUp() {
+        for (i in 1..ControllerConstants.TOTAL_COLUMNS) {
+            for (j in 1..ControllerConstants.TOTAL_ROWS) {
+                availableSeats.add(Seat(i, j, CinemaHelpers.seatPrice(i, j), false))
+            }
+        }
+    }
+
     @Test
     fun testGetSeatsShouldReturnWithStatus200() {
         val mockResponse = CinemaResponseDTO(
@@ -192,18 +203,5 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
             .andExpectAll(
                 status().isUnauthorized
             )
-    }
-
-    companion object {
-        private val availableSeats = mutableListOf<Seat>()
-
-        @BeforeEach
-        fun setUp() {
-            for (i in 1..ControllerConstants.TOTAL_COLUMNS) {
-                for (j in 1..ControllerConstants.TOTAL_ROWS) {
-                    availableSeats.add(Seat(i, j, CinemaHelpers.seatPrice(i, j), false))
-                }
-            }
-        }
     }
 }

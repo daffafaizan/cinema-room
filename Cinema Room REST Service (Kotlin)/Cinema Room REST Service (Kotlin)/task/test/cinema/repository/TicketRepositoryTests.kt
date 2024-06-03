@@ -65,7 +65,7 @@ class TicketRepositoryTests {
         if (ticket != null) {
             ticket.seat = seat
 
-            ticketRepository.updateTicket(ticket.token, ticket)
+            ticketRepository.updateTicket(ticket)
 
             val actualTicket = ticketRepository.getTicket(ticket.token)
             assertEquals(ticket, actualTicket)

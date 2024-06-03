@@ -40,7 +40,7 @@ class CinemaService(val cinemaRepository: CinemaRepository, val ticketRepository
         } else {
             seat.booked = true
             val ticket = Ticket(seat=seat)
-            cinemaRepository.updateSeat(request.row, request.column, seat)
+            cinemaRepository.updateSeat(seat)
             ticketRepository.saveTicket(ticket)
 
             return ticket
@@ -54,8 +54,8 @@ class CinemaService(val cinemaRepository: CinemaRepository, val ticketRepository
         } else {
             if (ticket.seat.booked) {
                 ticket.seat.booked = false
-                cinemaRepository.updateSeat(ticket.seat.row, ticket.seat.column, ticket.seat)
-                ticketRepository.updateTicket(request.token, ticket)
+                cinemaRepository.updateSeat(ticket.seat)
+                ticketRepository.updateTicket(ticket)
 
                 return ReturnResponseDTO(
                     ticket.seat

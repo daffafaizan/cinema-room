@@ -115,13 +115,13 @@ class CinemaServiceTests {
     @Test
     fun testReturnTicketValidBody() {
         val mockRequest = ReturnRequestDTO(
-            ServiceConstants.TOKEN
+            ServiceConstants.VALID_TOKEN
         )
         val ticket = Ticket(mockRequest.token, seat=stubPurchasedSeat)
 
         Mockito.`when`(ticketRepository.getTicket(mockRequest.token)).thenReturn(ticket)
-        Mockito.doNothing().`when`(cinemaRepository).updateSeat(ticket.seat.row, ticket.seat.column, ticket.seat)
-        Mockito.doNothing().`when`(ticketRepository).updateTicket(mockRequest.token, ticket)
+        Mockito.doNothing().`when`(cinemaRepository).updateSeat(ticket.seat)
+        Mockito.doNothing().`when`(ticketRepository).updateTicket(ticket)
 
         val actualResponse = cinemaService.returnTicket(mockRequest)
         val excpectedResponse = ReturnResponseDTO(
@@ -133,13 +133,13 @@ class CinemaServiceTests {
     @Test
     fun testReturnTicketInvalidBody() {
         val mockRequest = ReturnRequestDTO(
-            ""
+            ServiceConstants.INVALID_TOKEN
         )
         val ticket = Ticket(mockRequest.token, seat=stubPurchasedSeat)
 
         Mockito.`when`(ticketRepository.getTicket(mockRequest.token)).thenThrow(WrongTokenException(""))
-        Mockito.doNothing().`when`(cinemaRepository).updateSeat(ticket.seat.row, ticket.seat.column, ticket.seat)
-        Mockito.doNothing().`when`(ticketRepository).updateTicket(mockRequest.token, ticket)
+        Mockito.doNothing().`when`(cinemaRepository).updateSeat(ticket.seat)
+        Mockito.doNothing().`when`(ticketRepository).updateTicket(ticket)
 
         assertThrows(WrongTokenException::class.java) {
             cinemaService.returnTicket(mockRequest)
@@ -156,7 +156,7 @@ class CinemaServiceTests {
 
         Mockito.`when`(cinemaRepository.getIncome()).thenReturn(ServiceConstants.CURRENT_INCOME)
         Mockito.`when`(cinemaRepository.getAvailableSeats()).thenReturn(availableSeats)
-        Mockito.`when`(cinemaRepository.getPurchasedSeats()).thenReturn(emptyList<Seat>())
+        Mockito.`when`(cinemaRepository.getPurchasedSeats()).thenReturn(emptyList())
 
         val actualResponse = cinemaService.getStats(ServiceConstants.VALID_PASSWORD)
         assertEquals(expectedResponse, actualResponse)

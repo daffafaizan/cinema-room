@@ -16,8 +16,8 @@ class TicketRepository {
         return tickets.find { it.token == token }
     }
 
-    fun updateTicket(token: String, ticket: Ticket) {
-        val index = tickets.indexOfFirst { it.token == token }
+    fun updateTicket(ticket: Ticket) {
+        val index = tickets.indexOfFirst { it.token == ticket.token }
         tickets[index] = ticket
     }
 }

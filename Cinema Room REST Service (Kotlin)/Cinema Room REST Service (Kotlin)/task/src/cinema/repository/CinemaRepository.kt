@@ -35,8 +35,8 @@ class CinemaRepository {
         return seats.find { it.row == row && it.column == column }
     }
 
-    fun updateSeat(row: Int, column: Int, seat: Seat) {
-        val index = seats.indexOfFirst { it.row == row && it.column == column }
+    fun updateSeat(seat: Seat) {
+        val index = seats.indexOfFirst { it.row == seat.row && it.column == seat.column }
         seats[index] = seat
     }
 
