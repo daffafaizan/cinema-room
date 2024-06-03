@@ -4,8 +4,10 @@ import cinema.dto.request.PurchaseSeatRequestDTO
 import cinema.dto.request.ReturnRequestDTO
 import cinema.dto.response.CinemaResponseDTO
 import cinema.dto.response.ReturnResponseDTO
+import cinema.dto.response.StatsResponseDTO
 import cinema.exception.OutOfBoundsException
 import cinema.exception.TicketSoldException
+import cinema.exception.WrongPasswordException
 import cinema.exception.WrongTokenException
 import cinema.model.Seat
 import cinema.model.Ticket
@@ -32,13 +34,13 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
 
     @Test
     fun testGetSeatsShouldReturnWithStatus200() {
-        val expectedResponse = CinemaResponseDTO(
+        val mockResponse = CinemaResponseDTO(
             CinemaConstants.TOTAL_ROWS,
             CinemaConstants.TOTAL_COLUMNS,
             availableSeats
         )
 
-        Mockito.`when`(cinemaService.getAllSeats()).thenReturn(expectedResponse)
+        Mockito.`when`(cinemaService.getAllSeats()).thenReturn(mockResponse)
 
         mockMvc.perform(MockMvcRequestBuilders
             .get(CinemaConstants.GET_SEATS_URL))
@@ -46,7 +48,7 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
                 status().isOk,
                 content().contentType(MediaType.APPLICATION_JSON),
                 content().json(
-                    mapper.writeValueAsString(expectedResponse)
+                    mapper.writeValueAsString(mockResponse)
                 )
             )
     }
@@ -164,6 +166,38 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
             .content(mapper.writeValueAsString(mockRequest)))
             .andExpectAll(
                 status().isBadRequest
+            )
+    }
+
+    @Test
+    fun testStatsValidPasswordShouldReturnWithStatus200() {
+        val mockResponse = StatsResponseDTO(
+            CinemaConstants.CURRENT_INCOME,
+            CinemaConstants.AVAILABLE_SEATS,
+            CinemaConstants.PURCHASED_TICKETS
+        )
+
+        Mockito.`when`(cinemaService.getStats(CinemaConstants.VALID_PASSWORD)).thenReturn(mockResponse)
+
+        mockMvc.perform(MockMvcRequestBuilders
+            .get(CinemaConstants.STATS_URL)
+            .param(CinemaConstants.STATS_PARAM, CinemaConstants.VALID_PASSWORD))
+            .andExpectAll(
+                status().isOk,
+                content().contentType(MediaType.APPLICATION_JSON),
+                content().json(mapper.writeValueAsString(mockResponse))
+            )
+    }
+
+    @Test
+    fun testStatsInvalidPasswordShouldReturnWithStatus200() {
+        Mockito.`when`(cinemaService.getStats(CinemaConstants.INVALID_PASSWORD)).thenThrow(WrongPasswordException(""))
+
+        mockMvc.perform(MockMvcRequestBuilders
+            .get(CinemaConstants.STATS_URL)
+            .param(CinemaConstants.STATS_PARAM, CinemaConstants.INVALID_PASSWORD))
+            .andExpectAll(
+                status().isUnauthorized
             )
     }
 
