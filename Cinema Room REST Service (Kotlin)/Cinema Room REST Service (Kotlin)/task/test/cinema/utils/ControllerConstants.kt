@@ -1,6 +1,6 @@
 package cinema.utils
 
-object CinemaControllerConstants {
+object ControllerConstants {
     const val GET_SEATS_URL = "/seats"
     const val PURCHASE_TICKET_URL = "/purchase"
     const val RETURN_TICKET_URL = "/return"

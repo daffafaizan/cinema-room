@@ -5,7 +5,7 @@ import cinema.dto.response.*
 import cinema.exception.*
 import cinema.model.*
 import cinema.service.CinemaService
-import cinema.utils.CinemaControllerConstants
+import cinema.utils.ControllerConstants
 import cinema.utils.CinemaHelpers
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.BeforeEach
@@ -28,15 +28,15 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
     @Test
     fun testGetSeatsShouldReturnWithStatus200() {
         val mockResponse = CinemaResponseDTO(
-            CinemaControllerConstants.TOTAL_ROWS,
-            CinemaControllerConstants.TOTAL_COLUMNS,
+            ControllerConstants.TOTAL_ROWS,
+            ControllerConstants.TOTAL_COLUMNS,
             availableSeats
         )
 
         Mockito.`when`(cinemaService.getAllSeats()).thenReturn(mockResponse)
 
         mockMvc.perform(MockMvcRequestBuilders
-            .get(CinemaControllerConstants.GET_SEATS_URL))
+            .get(ControllerConstants.GET_SEATS_URL))
             .andExpectAll(
                 status().isOk,
                 content().contentType(MediaType.APPLICATION_JSON),
@@ -49,13 +49,13 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
     @Test
     fun testPurchaseValidBodyShouldReturnWithStatus200() {
         val mockRequest = PurchaseSeatRequestDTO(
-            row = CinemaControllerConstants.PURCHASE_VALID_ROW,
-            column = CinemaControllerConstants.PURCHASE_VALID_COLUMN
+            row = ControllerConstants.PURCHASE_VALID_ROW,
+            column = ControllerConstants.PURCHASE_VALID_COLUMN
         )
         val stubSeat = Seat(
-            CinemaControllerConstants.PURCHASE_VALID_ROW,
-            CinemaControllerConstants.PURCHASE_VALID_COLUMN,
-            CinemaHelpers.seatPrice(CinemaControllerConstants.PURCHASE_VALID_COLUMN, CinemaControllerConstants.PURCHASE_VALID_ROW),
+            ControllerConstants.PURCHASE_VALID_ROW,
+            ControllerConstants.PURCHASE_VALID_COLUMN,
+            CinemaHelpers.seatPrice(ControllerConstants.PURCHASE_VALID_COLUMN, ControllerConstants.PURCHASE_VALID_ROW),
             true
         )
         val mockResponse = Ticket(seat=stubSeat)
@@ -63,7 +63,7 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
         Mockito.`when`(cinemaService.purchaseTicket(mockRequest)).thenReturn(mockResponse)
 
         mockMvc.perform(MockMvcRequestBuilders
-            .post(CinemaControllerConstants.PURCHASE_TICKET_URL)
+            .post(ControllerConstants.PURCHASE_TICKET_URL)
             .contentType(MediaType.APPLICATION_JSON)
             .content(mapper.writeValueAsString(mockRequest)))
             .andExpectAll(
@@ -76,14 +76,14 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
     @Test
     fun testPurchaseInvalidOutOfBoundsBodyShouldReturnWithStatus400() {
         val mockRequest = PurchaseSeatRequestDTO(
-            row = CinemaControllerConstants.PURCHASE_INVALID_ROW,
-            column = CinemaControllerConstants.PURCHASE_INVALID_COLUMN
+            row = ControllerConstants.PURCHASE_INVALID_ROW,
+            column = ControllerConstants.PURCHASE_INVALID_COLUMN
         )
 
         Mockito.`when`(cinemaService.purchaseTicket(mockRequest)).thenThrow(OutOfBoundsException(""))
 
         mockMvc.perform(MockMvcRequestBuilders
-            .post(CinemaControllerConstants.PURCHASE_TICKET_URL)
+            .post(ControllerConstants.PURCHASE_TICKET_URL)
             .contentType(MediaType.APPLICATION_JSON)
             .content(mapper.writeValueAsString(mockRequest)))
             .andExpectAll(
@@ -94,19 +94,19 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
     @Test
     fun testPurchaseValidAlreadyPurchasedBodyShouldReturnWithStatus400() {
         val mockRequest = PurchaseSeatRequestDTO(
-            row = CinemaControllerConstants.PURCHASE_VALID_ROW,
-            column = CinemaControllerConstants.PURCHASE_VALID_COLUMN
+            row = ControllerConstants.PURCHASE_VALID_ROW,
+            column = ControllerConstants.PURCHASE_VALID_COLUMN
         )
 
         Mockito.`when`(cinemaService.purchaseTicket(mockRequest)).thenThrow(TicketSoldException(""))
 
         mockMvc.perform(MockMvcRequestBuilders
-            .post(CinemaControllerConstants.PURCHASE_TICKET_URL)
+            .post(ControllerConstants.PURCHASE_TICKET_URL)
             .contentType(MediaType.APPLICATION_JSON)
             .content(mapper.writeValueAsString(mockRequest))
         )
         mockMvc.perform(MockMvcRequestBuilders
-            .post(CinemaControllerConstants.PURCHASE_TICKET_URL)
+            .post(ControllerConstants.PURCHASE_TICKET_URL)
             .contentType(MediaType.APPLICATION_JSON)
             .content(mapper.writeValueAsString(mockRequest)))
             .andExpectAll(
@@ -117,9 +117,9 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
     @Test
     fun testReturnValidBodyShouldReturnWithStatus200() {
         val stubSeat = Seat(
-            CinemaControllerConstants.PURCHASE_VALID_ROW,
-            CinemaControllerConstants.PURCHASE_VALID_COLUMN,
-            CinemaHelpers.seatPrice(CinemaControllerConstants.PURCHASE_VALID_COLUMN, CinemaControllerConstants.PURCHASE_VALID_ROW),
+            ControllerConstants.PURCHASE_VALID_ROW,
+            ControllerConstants.PURCHASE_VALID_COLUMN,
+            CinemaHelpers.seatPrice(ControllerConstants.PURCHASE_VALID_COLUMN, ControllerConstants.PURCHASE_VALID_ROW),
             true
         )
         val stubTicket = Ticket(seat=stubSeat)
@@ -135,7 +135,7 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
         Mockito.`when`(cinemaService.returnTicket(mockRequest)).thenReturn(mockResponse)
 
         mockMvc.perform(MockMvcRequestBuilders
-            .post(CinemaControllerConstants.RETURN_TICKET_URL)
+            .post(ControllerConstants.RETURN_TICKET_URL)
             .contentType(MediaType.APPLICATION_JSON)
             .content(mapper.writeValueAsString(mockRequest)))
             .andExpectAll(
@@ -148,13 +148,13 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
     @Test
     fun testReturnInvalidBodyShouldReturnWithStatus400() {
         val mockRequest = ReturnRequestDTO(
-            CinemaControllerConstants.INVALID_TOKEN
+            ControllerConstants.INVALID_TOKEN
         )
 
         Mockito.`when`(cinemaService.returnTicket(mockRequest)).thenThrow(WrongTokenException(""))
 
         mockMvc.perform(MockMvcRequestBuilders
-            .post(CinemaControllerConstants.RETURN_TICKET_URL)
+            .post(ControllerConstants.RETURN_TICKET_URL)
             .contentType(MediaType.APPLICATION_JSON)
             .content(mapper.writeValueAsString(mockRequest)))
             .andExpectAll(
@@ -165,16 +165,16 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
     @Test
     fun testStatsValidPasswordShouldReturnWithStatus200() {
         val mockResponse = StatsResponseDTO(
-            CinemaControllerConstants.CURRENT_INCOME,
-            CinemaControllerConstants.AVAILABLE_SEATS,
-            CinemaControllerConstants.PURCHASED_TICKETS
+            ControllerConstants.CURRENT_INCOME,
+            ControllerConstants.AVAILABLE_SEATS,
+            ControllerConstants.PURCHASED_TICKETS
         )
 
-        Mockito.`when`(cinemaService.getStats(CinemaControllerConstants.VALID_PASSWORD)).thenReturn(mockResponse)
+        Mockito.`when`(cinemaService.getStats(ControllerConstants.VALID_PASSWORD)).thenReturn(mockResponse)
 
         mockMvc.perform(MockMvcRequestBuilders
-            .get(CinemaControllerConstants.STATS_URL)
-            .param(CinemaControllerConstants.STATS_PARAM, CinemaControllerConstants.VALID_PASSWORD))
+            .get(ControllerConstants.STATS_URL)
+            .param(ControllerConstants.STATS_PARAM, ControllerConstants.VALID_PASSWORD))
             .andExpectAll(
                 status().isOk,
                 content().contentType(MediaType.APPLICATION_JSON),
@@ -184,11 +184,11 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
 
     @Test
     fun testStatsInvalidPasswordShouldReturnWithStatus200() {
-        Mockito.`when`(cinemaService.getStats(CinemaControllerConstants.INVALID_PASSWORD)).thenThrow(WrongPasswordException(""))
+        Mockito.`when`(cinemaService.getStats(ControllerConstants.INVALID_PASSWORD)).thenThrow(WrongPasswordException(""))
 
         mockMvc.perform(MockMvcRequestBuilders
-            .get(CinemaControllerConstants.STATS_URL)
-            .param(CinemaControllerConstants.STATS_PARAM, CinemaControllerConstants.INVALID_PASSWORD))
+            .get(ControllerConstants.STATS_URL)
+            .param(ControllerConstants.STATS_PARAM, ControllerConstants.INVALID_PASSWORD))
             .andExpectAll(
                 status().isUnauthorized
             )
@@ -199,8 +199,8 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
 
         @BeforeEach
         fun setUp() {
-            for (i in 1..CinemaControllerConstants.TOTAL_COLUMNS) {
-                for (j in 1..CinemaControllerConstants.TOTAL_ROWS) {
+            for (i in 1..ControllerConstants.TOTAL_COLUMNS) {
+                for (j in 1..ControllerConstants.TOTAL_ROWS) {
                     availableSeats.add(Seat(i, j, CinemaHelpers.seatPrice(i, j), false))
                 }
             }

@@ -3,7 +3,7 @@ package cinema.repository
 import cinema.model.Seat
 import cinema.model.Ticket
 import cinema.utils.CinemaHelpers
-import cinema.utils.CinemaRepositoryConstants
+import cinema.utils.RepositoryConstants
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -21,9 +21,9 @@ class TicketRepositoryTests {
         ticketRepository = TicketRepository()
 
         seat = Seat(
-            CinemaRepositoryConstants.ROW,
-            CinemaRepositoryConstants.COLUMN,
-            CinemaHelpers.seatPrice(CinemaRepositoryConstants.ROW, CinemaRepositoryConstants.COLUMN),
+            RepositoryConstants.ROW,
+            RepositoryConstants.COLUMN,
+            CinemaHelpers.seatPrice(RepositoryConstants.ROW, RepositoryConstants.COLUMN),
             false
         )
         ticket = Ticket(seat=seat)
@@ -42,7 +42,7 @@ class TicketRepositoryTests {
 
     @Test
     fun testGetTicketInvalidToken() {
-        val ticket = ticketRepository.getTicket("INVALID-TOKEN")
+        val ticket = ticketRepository.getTicket(RepositoryConstants.INVALID_TOKEN)
 
         assertTrue(ticket == null)
     }
@@ -56,9 +56,9 @@ class TicketRepositoryTests {
     @Test
     fun testUpdateTicket() {
         val seat = Seat(
-            CinemaRepositoryConstants.ROW,
-            CinemaRepositoryConstants.COLUMN,
-            10000,
+            RepositoryConstants.ROW,
+            RepositoryConstants.COLUMN,
+            RepositoryConstants.NEW_PRICE,
             true
         )
         val ticket = ticketRepository.getTicket(ticket.token)
