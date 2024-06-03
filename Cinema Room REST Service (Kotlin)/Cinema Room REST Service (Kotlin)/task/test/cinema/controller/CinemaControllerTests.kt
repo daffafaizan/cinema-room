@@ -40,6 +40,11 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
             ))
     }
 
+    @Test
+    fun testPurchaseValidBodyShouldReturnWithStatus200() {
+
+    }
+
     companion object {
         private val availableSeats = mutableListOf<Seat>()
 
