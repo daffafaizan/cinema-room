@@ -13,7 +13,7 @@ object ControllerConstants {
     const val PURCHASE_INVALID_ROW = 100
     const val PURCHASE_INVALID_COLUMN = 200
     const val INVALID_TOKEN = "INVALID-TOKEN"
-    const val VALID_PASSWORD = "supersecret"
+    const val VALID_PASSWORD = "super_secret"
     const val INVALID_PASSWORD = "notsosecret"
     const val CURRENT_INCOME = 30
     const val AVAILABLE_SEATS = 78
