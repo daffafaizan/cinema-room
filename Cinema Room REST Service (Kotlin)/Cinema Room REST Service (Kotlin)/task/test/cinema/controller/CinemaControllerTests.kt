@@ -1,12 +1,14 @@
 package cinema.controller
 
+import cinema.dto.request.PurchaseSeatRequestDTO
 import cinema.dto.response.CinemaResponseDTO
 import cinema.model.Seat
+import cinema.model.Ticket
 import cinema.service.CinemaService
 import cinema.utils.CinemaConstants
 import cinema.utils.CinemaHelpers
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
@@ -42,14 +44,31 @@ class CinemaControllerTests(@Autowired val mockMvc: MockMvc, @Autowired val mapp
 
     @Test
     fun testPurchaseValidBodyShouldReturnWithStatus200() {
+        val mockRequest = PurchaseSeatRequestDTO(
+            row = CinemaConstants.PURCHASE_ROW,
+            column = CinemaConstants.PURCHASE_COLUMN
+        )
+        val stubSeat = Seat(
+            CinemaConstants.PURCHASE_ROW,
+            CinemaConstants.PURCHASE_COLUMN,
+            CinemaHelpers.seatPrice(CinemaConstants.PURCHASE_COLUMN, CinemaConstants.PURCHASE_ROW),
+            true
+        )
+        val mockResponse = Ticket(seat=stubSeat)
 
+        Mockito.`when`(cinemaService.purchaseTicket(mockRequest)).thenReturn(mockResponse)
+
+        mockMvc.perform(MockMvcRequestBuilders
+            .post("/purchase")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(mapper.writeValueAsString(mockRequest)))
+            .andExpectAll(status().isOk, content().contentType(MediaType.APPLICATION_JSON), content().json(mapper.writeValueAsString(mockResponse)))
     }
 
     companion object {
         private val availableSeats = mutableListOf<Seat>()
 
-        @BeforeAll
-        @JvmStatic
+        @BeforeEach
         fun setUp() {
             for (i in 1..CinemaConstants.TOTAL_COLUMNS) {
                 for (j in 1..CinemaConstants.TOTAL_ROWS) {
