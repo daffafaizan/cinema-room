@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service
 
 const val ROW = 9
 const val COLUMN = 9
+const val PASSWORD = "super_secret"
 
 @Service
 class CinemaService(val cinemaRepository: CinemaRepository, val ticketRepository: TicketRepository) {
@@ -67,7 +68,7 @@ class CinemaService(val cinemaRepository: CinemaRepository, val ticketRepository
     }
 
     fun getStats(password: String?): StatsResponseDTO {
-        if (password == null || password != "super_secret") {
+        if (password == null || password != PASSWORD) {
             throw WrongPasswordException("The password is wrong!")
         }
 
