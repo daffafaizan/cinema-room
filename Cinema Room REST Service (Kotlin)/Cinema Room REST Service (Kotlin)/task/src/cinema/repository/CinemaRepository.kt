@@ -2,10 +2,9 @@ package cinema.repository
 
 import cinema.model.Seat
 import cinema.utils.CinemaHelpers
+import cinema.utils.CinemaInitConstants.COLUMN
+import cinema.utils.CinemaInitConstants.ROW
 import org.springframework.stereotype.Repository
-
-const val ROW = 9
-const val COLUMN = 9
 
 @Repository
 class CinemaRepository {

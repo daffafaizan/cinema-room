@@ -12,10 +12,10 @@ import cinema.exception.WrongTokenException
 import cinema.model.Ticket
 import cinema.repository.CinemaRepository
 import cinema.repository.TicketRepository
+import cinema.utils.CinemaInitConstants.COLUMN
+import cinema.utils.CinemaInitConstants.ROW
 import org.springframework.stereotype.Service
 
-const val ROW = 9
-const val COLUMN = 9
 const val PASSWORD = "super_secret"
 
 @Service
